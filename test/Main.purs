@@ -2,8 +2,10 @@ module Test.Main where
 
 import Prelude
 import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
+import Log.Winston
+import Log.Winston.Types
 
-main :: forall e. Eff (console :: CONSOLE | e) Unit
+main :: forall e. Eff (log :: LOG | e) Unit
 main = do
-  log "You should add some tests."
+  let wn = defaultLogger
+  debug wn "dudu"
