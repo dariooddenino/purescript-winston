@@ -20,3 +20,15 @@ exports._log = function _log(wn, level, message) {
     return {};
   };
 };
+
+exports._consoleTransport = function _consoleTransport(options) {
+  return new (winston.transports.Console)(options);
+};
+
+exports._fileTransport = function _fileTransport(options) {
+  return new (winston.transports.File)(options);
+};
+
+exports._httpTransport = function _httpTransport(options) {
+  return new (winston.transports.HTTP)(options);
+};

@@ -19,6 +19,8 @@ foreign import _createLogger :: Foreign -> Logger
 -- Array LogLevel
 -- Array Transports
 
+
+
 createLogger :: Maybe LogLevel -> Maybe (Array LogLevel) -> Maybe (Array Transport) -> Logger
 createLogger l ls t = _createLogger $ _makeOptions l ls t
 

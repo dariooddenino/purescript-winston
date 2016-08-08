@@ -6,11 +6,11 @@ import Data.Maybe (Maybe(..), maybe, isJust)
 import Data.Options (Option, opt, options, optional, (:=))
 import Data.StrMap as M
 import Data.StrMap.ST as SM
-import Data.Foldable (foldr, for_)
+import Data.Foldable (for_)
 
 foreign import data LOG :: !
 foreign import data Logger :: *
---foreign import data Transport :: *
+foreign import data Transport :: *
 
 data LogLevel = LogLevel
                 { level :: Level
@@ -64,20 +64,20 @@ sillyLevel = LogLevel
              , color: Nothing
              }
 
-data Transport = Transport
-
 foreign import data WinstonOpts :: *
 
-lvlOpt :: Option WinstonOpts (Maybe Level)
+tipe WinstonOpt = Option WinstonOpts
+
+lvlOpt :: WinstonOpt (Maybe Level)
 lvlOpt = optional $ opt "level"
 
-transportsOpt :: Option WinstonOpts (Maybe (Array Transport))
+transportsOpt :: WinstonOpt (Maybe (Array Transport))
 transportsOpt = optional $ opt "transports"
 
-levelsOpt :: Option WinstonOpts (Maybe (M.StrMap Int))
+levelsOpt :: WinstonOpt (Maybe (M.StrMap Int))
 levelsOpt = optional $ opt "levels"
 
-colorsOpt :: Option WinstonOpts (Maybe (M.StrMap String))
+colorsOpt :: WinstonOpt (Maybe (M.StrMap String))
 colorsOpt = optional $ opt "colors"
 
 _extractLevels :: Maybe (Array LogLevel) -> Maybe (M.StrMap Int)
@@ -95,10 +95,7 @@ _extractColors (Just ls) =
   Just $ M.pureST
   (do
       s <- SM.new
-      for_ ls (\(LogLevel { level, color }) ->
-        case color of
-          (Just c) -> SM.poke s level c
-          Nothing -> pure s)
+      for_ ls (\(LogLevel { level, color }) -> maybe (pure s) (SM.poke s level) color)
       pure s)
 
 -- level
@@ -111,3 +108,86 @@ _makeOptions l ls t = options $
   levelsOpt := (_extractLevels ls) <>
   colorsOpt := (_extractColors ls) <>
   transportsOpt := t
+
+
+-- Transports options
+
+-- Console
+
+silentOpt :: WinstonOpt Boolean
+silentOpt = opt "silent"
+
+colorizeOpt :: WinstonOpt Boolean
+colorizeOpt = opt "colorize"
+
+timestampOpt :: WinstonOpt Boolean
+timestampOpt = opt "timestamp"
+
+jsonOpt :: WinstonOpt Boolean
+jsonOpt = opt "json"
+
+stringifyOpt :: WinstonOpt Boolean
+stringifyOpt = opt "stringify"
+
+prettyPrintOpt :: WinstonOpt Boolean
+prettyPrintOpt = opt "prettyPrint"
+
+depthOpt :: WinstonOpt Int
+depthOpt = opt "depth"
+
+humanReadableUnhandledExceptionOpt :: WinstonOpt Boolean
+humanReadableUnhandledExceptionOpt = opt "humanReadableUnhandledExceptionOpt"
+
+showLevelOpt :: WinstonOpt Boolean
+showLevelOpt = opt "showLevel"
+
+-- formatterOpt ?
+
+stderrLevelsOpt :: Array LogLevel -> WinstonOpt (Array String)
+stderrLevelsOpt = opt "stderrLevel" <<< map (\ (LogLevel { level }) -> level)
+
+-- File
+
+filenameOpt :: WinstonOpt String
+filenameOpt = opt "filename"
+
+maxsizeOpt :: WinstonOpt Int
+maxsizeOpt = opt "maxsize"
+
+maxFilesOpt :: WinstonOpt Int
+maxFilesOpt = opt "maxFiles"
+
+-- streamOpt ?
+
+eolOpt :: WinstonOpt String
+eolOpt = opt "eol"
+
+logstashOpt :: WinstonOpt Boolean
+logstashOpt = opt "logstash"
+
+tailableOpt :: WinstonOpt Boolean
+tailableOpt = opt "tailable"
+
+maxRetriesOpt :: WinstonOpt Int
+maxRetriesOpt = opt "maxRetries"
+
+zippedArchiveOpt :: WinstonOpt Boolean
+zippedArchiveOpt = opt "zippedArchive"
+
+-- optionsOps ?
+
+-- HTTP
+
+hostOpt :: WinstonOpt String
+hostOpt = opt "host"
+
+portOpt :: WinstonOpt Int
+portOpt = opt "port"
+
+pathOpt :: WinstonOpt String
+pathOpt = opt "path"
+
+-- auth ?
+
+sslOpt :: WinstonOpt Boolean
+sslOpt = opt "ssl"
