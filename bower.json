@@ -9,7 +9,8 @@
   "dependencies": {
     "purescript-console": "^1.0.0",
     "purescript-functions": "^1.0.0",
-    "purescript-options": "^1.0.0"
+    "purescript-options": "^1.0.0",
+    "purescript-maps": "^1.1.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^1.0.0"

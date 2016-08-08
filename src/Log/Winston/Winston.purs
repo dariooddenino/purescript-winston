@@ -6,19 +6,21 @@ import Control.Monad.Eff
 import Data.Foreign
 import Data.Foreign.Class
 import Data.Function.Uncurried (Fn3, runFn3)
-
-foreign import data LOG :: !
-foreign import data Logger :: *
+import Data.Maybe (Maybe)
 
 foreign import _defaultLogger :: Logger
 
 defaultLogger :: Logger
 defaultLogger = _defaultLogger
 
--- foreign import _createLogger :: Foreign -> Logger
+foreign import _createLogger :: Foreign -> Logger
 
--- createLogger :: Logger
--- createLogger = _createLogger (toForeign unit)
+-- level
+-- Array LogLevel
+-- Array Transports
+
+createLogger :: Maybe LogLevel -> Maybe (Array LogLevel) -> Maybe (Array Transport) -> Logger
+createLogger l ls t = _createLogger $ _makeOptions l ls t
 
 foreign import _log
   :: forall eff
@@ -34,7 +36,7 @@ log
   -> LogLevel
   -> m
   -> Eff (log :: LOG | eff) Unit
-log wn (LogLevel l _) m = runFn3 _log wn l (show m)
+log wn (LogLevel { level }) m = runFn3 _log wn level (show m)
 
 spyLog
   :: forall eff m
