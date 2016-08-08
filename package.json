@@ -1,0 +1,22 @@
+{
+  "name": "purescript-winston",
+  "version": "0.0.1",
+  "description": "A PureScript wrapper for winston",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dariooddenino/purescript-winston.git"
+  },
+  "author": "Dario Oddenino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dariooddenino/purescript-winston/issues"
+  },
+  "homepage": "https://github.com/dariooddenino/purescript-winston#readme",
+  "dependencies": {
+    "winston": "^2.2.0"
+  }
+}
